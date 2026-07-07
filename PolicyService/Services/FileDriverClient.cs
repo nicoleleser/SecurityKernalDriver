@@ -1,6 +1,7 @@
-﻿using System.Runtime.InteropServices;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Win32.SafeHandles;
+using PolicyContracts;
+using System.Runtime.InteropServices;
 using System.Security.Principal;
 
 
@@ -78,9 +79,23 @@ public sealed class FileDriverClient : IDisposable
         public uint Magic;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct TL_RULE
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+        public string Pattern;
+
+        public int Action;
+    }
+
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     private struct TL_POLICY_SYNC_MESSAGE
     {
+        public int RuleCount;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+        public TL_RULE[] Rules;
+
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
         public string AllowedPattern;
 
@@ -161,7 +176,7 @@ public sealed class FileDriverClient : IDisposable
         }
     }
 
-    public void SendPolicySync(string? allowedPattern, string? blockedPattern)
+    public void SendPolicySync(string? allowedPattern, string? blockedPattern, List<(string Pattern, PolicyAction Action)> rules)
     {
         if (!IsConnected || _portHandle is null)
         {
@@ -170,9 +185,21 @@ public sealed class FileDriverClient : IDisposable
 
         TL_POLICY_SYNC_MESSAGE message = new()
         {
+            RuleCount = Math.Min(rules.Count, 16),
+            Rules = new TL_RULE[16],
+
             AllowedPattern = allowedPattern ?? string.Empty,
             BlockedPattern = blockedPattern ?? string.Empty
         };
+
+        for (int i = 0; i < message.RuleCount; i++)
+        {
+            message.Rules[i] = new TL_RULE
+            {
+                Pattern = rules[i].Pattern.ToUpperInvariant(),
+                Action = (int)rules[i].Action
+            };
+        }
 
         int size = Marshal.SizeOf<TL_POLICY_SYNC_MESSAGE>();
         IntPtr buffer = Marshal.AllocHGlobal(size);

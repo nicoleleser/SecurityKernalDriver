@@ -32,4 +32,12 @@ public static class PolicyProjection
 
         return null;
     }
+
+    public static List<(string Pattern, PolicyAction Action)> GetAllFileRules(PolicyConfiguration policy)
+    {
+        return policy.FileRules
+            .Where(r => !string.IsNullOrWhiteSpace(r.Pattern))
+            .Select(r => (r.Pattern, r.Action))
+            .ToList();
+    }
 }

@@ -70,13 +70,20 @@ public sealed class Worker(
             policy.FileRules.Count,
             policy.IpRules.Count);
 
+        var rules = PolicyProjection.GetAllFileRules(policy);
+
+        foreach (var rule in rules)
+        {
+            logger.LogInformation("Rule: {Pattern} -> {Action}", rule.Pattern, rule.Action);
+        }
+
         string? allowedPattern =
             PolicyProjection.GetFirstFilePatternByAction(policy, PolicyAction.Allow);
 
         string? blockedPattern =
             PolicyProjection.GetFirstFilePatternByAction(policy, PolicyAction.Block);
 
-        fileDriverClient.SendPolicySync(allowedPattern, blockedPattern);
+        fileDriverClient.SendPolicySync(allowedPattern, blockedPattern, rules);
 
         logger.LogInformation(
             "Sent policy sync to driver: allow={AllowPattern} block={BlockedPattern}",
