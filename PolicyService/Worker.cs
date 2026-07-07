@@ -20,6 +20,7 @@ public sealed class Worker(
         try
         {
             fileDriverClient.Connect();
+            _ = fileDriverClient.ListenAsync(stoppingToken);
             logger.LogInformation("Driver connection established");
 
             await ApplyPolicyAsync(stoppingToken);

@@ -1,11 +1,11 @@
 {
   "FileRules": [
     {
-      "Pattern": "C:\\Windows\\System32\\CalculatorApp.exe",
+      "Pattern": "notepad.exe",
       "Action": 0
     },
     {
-      "Pattern": "C:\\Windows\\System32\\notepad.exe",
+      "Pattern": "CalculatorApp.exe",
       "Action": 1
     }
   ],
