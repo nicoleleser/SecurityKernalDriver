@@ -1,0 +1,38 @@
+# Visual Studio
+.vs/
+*.VC.db
+*.VC.opendb
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build output
+bin/
+obj/
+x64/
+x86/
+Debug/
+Release/
+
+# Test output
+TestResults/
+
+# NuGet
+packages/
+*.nupkg
+
+# Logs
+Logs/
+
+# Driver build/generated
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.tmp
+*.log
+
+# Windows noise
+Thumbs.db
+Desktop.ini

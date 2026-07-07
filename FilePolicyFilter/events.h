@@ -1,0 +1,36 @@
+#pragma once
+
+#include <fltKernel.h>
+
+#define TL_MAX_PATH_CHARS 260
+#define TL_MAX_NAME_CHARS 64
+#define TL_MAX_POLICY_PATTERN_CHARS 260
+
+#define TL_CONNECT_CONTEXT_VERSION 1
+#define TL_CONNECT_CONTEXT_MAGIC   0x544C4343  // 'TLCC'
+
+typedef struct _TL_CONNECT_CONTEXT
+{
+    ULONG Version;
+    ULONG Magic;
+} TL_CONNECT_CONTEXT, * PTL_CONNECT_CONTEXT;
+
+typedef enum _TL_FILE_EVENT_ACTION
+{
+    TlFileEventAllowed = 0,
+    TlFileEventBlocked = 1
+} TL_FILE_EVENT_ACTION;
+
+typedef struct _TL_FILE_EVENT_MESSAGE
+{
+    ULONG ProcessId;
+    ULONG Action;
+    WCHAR FinalName[TL_MAX_NAME_CHARS];
+    WCHAR FullPath[TL_MAX_PATH_CHARS];
+} TL_FILE_EVENT_MESSAGE, * PTL_FILE_EVENT_MESSAGE;
+
+typedef struct _TL_POLICY_SYNC_MESSAGE
+{
+    WCHAR AllowedPattern[TL_MAX_POLICY_PATTERN_CHARS];
+    WCHAR BlockedPattern[TL_MAX_POLICY_PATTERN_CHARS];
+} TL_POLICY_SYNC_MESSAGE, * PTL_POLICY_SYNC_MESSAGE;

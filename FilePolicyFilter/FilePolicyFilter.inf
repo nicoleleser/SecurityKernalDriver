@@ -1,0 +1,62 @@
+;
+; FilePolicyFilter.inf
+;
+
+[Version]
+Signature   = "$WINDOWS NT$"
+Class       = System ; TODO: specify appropriate Class
+ClassGuid   = {4d36e97d-e325-11ce-bfc1-08002be10318} ; TODO: specify appropriate ClassGuid
+Provider    = %ManufacturerName%
+CatalogFile = FilePolicyFilter.cat
+DriverVer   = ; TODO: set DriverVer in stampinf property pages
+PnpLockdown = 1
+
+[DestinationDirs]
+DefaultDestDir = 13
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+FilePolicyFilter.sys = 1,,
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName% = Standard,NT$ARCH$.10.0...16299 ; %13% support introduced in build 16299
+
+[Standard.NT$ARCH$.10.0...16299]
+%FilePolicyFilter.DeviceDesc% = FilePolicyFilter_Device, Root\FilePolicyFilter ; TODO: edit hw-id
+
+[FilePolicyFilter_Device.NT]
+CopyFiles = File_Copy
+
+[File_Copy]
+FilePolicyFilter.sys
+
+;-------------- Service installation
+[FilePolicyFilter_Device.NT.Services]
+AddService = FilePolicyFilter,%SPSVCINST_ASSOCSERVICE%, FilePolicyFilter_Service_Inst
+
+; -------------- FilePolicyFilter driver install sections
+[FilePolicyFilter_Service_Inst]
+DisplayName    = %FilePolicyFilter.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %13%\FilePolicyFilter.sys
+
+[FilePolicyFilter_Device.NT.Wdf]
+KmdfService = FilePolicyFilter, FilePolicyFilter_wdfsect
+
+[FilePolicyFilter_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE = 0x00000002
+ManufacturerName = "<Your manufacturer name>" ;TODO: Replace with your manufacturer name
+DiskName = "FilePolicyFilter Installation Disk"
+FilePolicyFilter.DeviceDesc = "FilePolicyFilter Device"
+FilePolicyFilter.SVCDESC = "FilePolicyFilter Service"

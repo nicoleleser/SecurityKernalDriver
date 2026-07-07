@@ -1,0 +1,18 @@
+{
+  "FileRules": [
+    {
+      "Pattern": "C:\\Windows\\System32\\CalculatorApp.exe",
+      "Action": 0
+    },
+    {
+      "Pattern": "C:\\Windows\\System32\\notepad.exe",
+      "Action": 1
+    }
+  ],
+  "IpRules": [
+    {
+      "CidrOrIp": "8.8.8.8",
+      "Action": 1
+    }
+  ]
+}
