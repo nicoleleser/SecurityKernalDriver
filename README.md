@@ -38,11 +38,6 @@ The current MVP supports:
 - allow-before-block behavior
 - runtime policy updates without rebooting
 
-## Not implemented yet
-
-This repository does **not** currently implement the Windows Filtering Platform (WFP) network driver portion.
-
-The current submission is focused on the file-enforcement vertical slice.
 
 ## Build and run
 
